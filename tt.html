@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>table tennis </title>
+</head>
+<body>
+
+                                <!-- canvas style -->
+  <!-- <style type="text/css">
+    #canvas{
+      border-radius: 12px;
+      border-width: 2px;
+      border-color: red;
+      border-style: solid;
+    }
+  </style> -->
+<h1 id="gameOver" style="display: none;margin-left: 450px;font-family: cursive; font-style: 50px;color: ">Game Over !!	</h1>
+<h2 id="result" style="margin-left: 500px; color: red;">	</h2>
+<canvas id="canvas" height="600" width="800"><h1>Game over</h1></canvas>
+<script type="text/javascript">
+	
+		 var canv=document.getElementById('canvas');
+		 var ctx= canv.getContext('2d');
+		  //paddle1 position
+  var paddleX1=5;
+  var paddleY1=300;
+                   //paddle2 position
+  var paddleX2=795;
+  var paddleY2=300;
+                       //both paddle height and width
+  var paddleHeight=100;
+  var paddleWidth=7;
+                     //paddle speed1
+  var paddleSpeed=20;
+                    //ball position
+  var ballX=400;
+  var ballY=300;
+                            //ball speed
+  var ballSpeedX=22;
+  var ballSpeedY=5;
+                           //paddle speed2
+  var paddleSpeedY2=10;
+             //scorecard
+  var score1=0;
+  var score2=0;
+                           //to finish the game
+ function gameOver(){
+ 	ballSpeedX=0;
+ 	ballSpeedY=0;
+ 	paddleX1=0;
+ 	paddleY1=0;
+ 	paddleSpeed=0;
+ 	document.getElementById('gameOver').style.display='block';
+ }
+              
+ //drawEverything();
+setInterval(move_ball ,30)
+	
+	function drawEverything(){
+		               //playing board
+		ctx.fillStyle="green";
+		ctx.fillRect(10,0,canv.width,canv.height);   
+		              //ball
+        ctx.fillStyle="white";
+        ctx.fillRect(ballX,ballY,10,10);            
+                       //paddle1
+        ctx.fillStyle="black";
+        ctx.fillRect(paddleX1,paddleY1,paddleWidth,paddleHeight);
+                               //paddle2
+         ctx.fillStyle="black";
+        ctx.fillRect(paddleX2,paddleY2,paddleWidth,paddleHeight);
+                                    //draw Net
+                                    var i=0;
+         while(i<=canv.height){
+          	ctx.fillStyle="white";
+          	ctx.fillRect(398,i,5,6);
+          	i=i+20;
+          }
+                          //scorecard
+         ctx.font="30px arial";                 
+        ctx.fillStyle="red";
+                        //scorecard1
+        ctx.fillText(score1 ,180,100)
+                        //scorecard2
+        ctx.fillText(score2,580,100)
+
+	}   
+	                    //to move the ball
+	function move_ball(){
+		ballX+=ballSpeedX;
+		ballY-=ballSpeedY;
+		
+                              //to bounce the ball when it strike the bat
+		
+		if (ballX<=0) {
+			 if (paddleY1-3<ballY && paddleY1+paddleHeight>=ballY) {
+			 	ballX = paddleX1+paddleWidth+2;
+       // ballSpeedX = -25;
+          	       ballSpeedX=-ballSpeedX;
+          }
+                else{
+                              //player1 misses score for player 2
+                	ballX=598;
+                	score2+=1;
+                	if (score2>9) {
+                		document.getElementById('result').innerHTML="CPU won the game <br> <br>Try Hard next time !!!"
+                		gameOver();
+                		
+                	}
+                }
+		}
+
+if (ballX>795) {
+	if (paddleY2<=ballY && paddleY2+paddleHeight>=ballY) {
+		 ballX=paddleX2+paddleWidth;
+    // ballSpeedX = 35;
+		 ballSpeedX=-ballSpeedX;
+	}
+	else
+	{
+		ballX=200;
+		score1+=1;
+		if (score1>9) {
+			document.getElementById('result').innerHTML="You won the game <br>  <br> Congratulation!!"
+			gameOver();
+		}
+	}
+}
+		if (ballY<=0 || ballY>=canv.height-3) {
+			ballSpeedY=-ballSpeedY;
+		}
+		
+        
+
+                                  //move paddle to hit the ball
+                 if (ballX>500 && ballY<200) {
+                 	 paddleY2=ballY-paddleHeight/2-10;
+                 	
+                 } 
+                  if (ballX>550 && ballY<400 && ballY>=200) {
+                 	paddleY2=ballY-paddleHeight/2-10;
+                 	
+                 }
+                  if (ballX>550 && ballY<600 && ballY>=400) {
+                 	 paddleY2=ballY-paddleHeight/2-10;
+                 	
+                 }   
+                 if (paddleY2+paddleHeight>canv.height+10) {
+                 	paddleX2=795;
+                 	paddleY2=300;
+                 } 
+                 if (paddleY2<-3) {
+                 	paddleX2=795;
+                 	paddleY2=300;
+                 }  
+
+		canv.width=canv.width;
+		drawEverything();
+	}
+    document.addEventListener("mousemove", Move_Paddle)  
+	
+	function Move_Paddle(e){
+              paddleY1=e.y - paddleHeight/2;
+
+		
+		if (paddleY1<= -100 || paddleY1+paddleHeight>=canv.height+100) {
+			paddleY1=300-paddleHeight/2;
+			paddleX1=5;
+		}
+		canv.width=canv.width;
+		drawEverything(); 
+       } 
+	
+</script>
+</body>
+</html>
